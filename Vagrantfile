@@ -3,24 +3,13 @@
 
 
   Vagrant.configure("2") do |config|
-    config.vm.network "private_network", ip: "192.168.33.10"
+    config.vm.network "private_network", ip: "192.168.33.11"
     config.vm.box = "bento/centos-6.7";
 
-    config.vm.hostname = "zookeeper1"
-    config.vm.provision "shell", path: "scripts/bootstrap.sh"
-    config.vm.provision "shell", path: "scripts/java.sh"
-    config.vm.provision "shell", path: "scripts/zookeeper.sh"
-    config.vm.provision "shell", path: "scripts/hbase.sh"
-    config.vm.provision "shell", path: "scripts/opentsdb.sh"
-
-    
-#    (1..3).each do |i|
-#	config.vm.define "zookeeper#{i}" do |s|
-#	  s.vm.hostname = "zookeeper#{i}"
-#	  s.vm.network "private_network", ip: "10.30.3.#{i+1}", netmask: "255.255.255.0", virtualbox__intnet: "my-network", drop_nat_interface_default_route: true
-#	  s.vm.provision "shell", path: "scripts/zookeeper.sh", args:"#{i}", privileged: false
-#	end
- #     end
+    # Open port to grafana server
+    config.vm.network "forwarded_port", guest: 3000, host: 3000
+    config.vm.hostname = "grafana"
+    config.vm.provision "shell", path: "scripts/grafana.sh"
   end
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
